@@ -1,16 +1,26 @@
 import {initializeApp} from "firebase/app";
 import {getFirestore}from "firebase/firestore";
+import {getStorage} from "firebase/storage"
 import { getAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage"
 // Initialize Firebase
+import {
+  API_KEY,
+  AUTH_DOMAIN,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
+  APP_ID,
+  MEASUREMENT_ID,
+} from "./env";
 const firebaseConfig = {
-  apiKey: "AIzaSyDFis3KHQh8wThtcghn6Udi-OQVNpbGlHQ",
-  authDomain: "opexroom-f149e.firebaseapp.com",
-  projectId: "opexroom-f149e",
-  storageBucket: "opexroom-f149e.appspot.com",
-  messagingSenderId: "80599270941",
-  appId: "1:80599270941:web:46a6c0123f2da5b040a8f4",
-  measurementId: "G-K0SJTVZ0VJ",
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID,
 };
 // Initialize Firebase app if not already initialized
 // const app = firebase.apps.length === 0 ? firebase.initializeApp(firebaseConfig) : firebase.app();
@@ -23,4 +33,5 @@ export const FIREBASE_APP = initializeApp(firebaseConfig)
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
+export const FIREBASE_STORAGE = getStorage(FIREBASE_APP)
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP)

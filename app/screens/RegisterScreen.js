@@ -1,4 +1,11 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React from "react";
 import { Icon } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
@@ -7,12 +14,26 @@ import * as Animatable from "react-native-animatable";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import KeyboardAvoidingContainer from "../components/KeyboardAvoidingContainer";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from "../../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  doc,
+  setDoc,
+  addDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import useImage from "../../hook/useImage";
+import { useState } from "react";
+import UploadScreen from "./UploadScreen";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
+  const { handlePress, newImg } = useImage();
+  const [progress, setProgress] = useState(0);
+  const [visibleUpload, setVisibleUpload] = useState(false);
+  console.log(newImg);
   const auth = FIREBASE_AUTH;
   const clearOnboarding = async () => {
     try {
@@ -25,7 +46,32 @@ const RegisterScreen = () => {
   const login = () => {
     navigation.navigate("LoginScreen");
   };
+  const uploadImage = async (newImg, fileType) => {
+    const response = await fetch(newImg);
+    const blob = await response.blob();
+    const storageRef = ref(
+      FIREBASE_STORAGE,
+      "Profileimage/" + new Date().getTime()
+    );
+    const uploadimage = uploadBytesResumable(storageRef, blob);
 
+    // Listen for events
+    uploadimage.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("upload is" + progress + "% done");
+        setProgress(progress);
+      },
+      () => {},
+      () => {
+        getDownloadURL(uploadimage.snapshot.ref).then(async (downloadurl) => {
+          console.log("downloadURL here", downloadurl);
+        });
+      }
+    );
+  };
   const registerUser = async (value) => {
     const { email, password, fullname, department, role, phone } = value;
     try {
@@ -34,7 +80,14 @@ const RegisterScreen = () => {
         email,
         password
       );
-      userInformation(user,value)
+      const userCred = user.user;
+      // Update user profile
+      await updateProfile(userCred, {
+        displayName: fullname,
+        photoURL: newImg,
+      });
+      await uploadImage(newImg, "image");
+      userInformation(user, value);
       console.log("User created successfully", user);
     } catch (error) {
       console.log(error);
@@ -42,20 +95,20 @@ const RegisterScreen = () => {
     }
     console.log("This are the values", value);
   };
-  const userInformation = async(user,value)=>{
-     const { email,fullname, department, role, phone } = value;
-   try {
-    const docRef = await setDoc(doc(FIRESTORE_DB, `users/${user.user.uid}`),{
-      fullname,
-      email,
-      department,
-      role,
-      phone
-    })
-   } catch (error) {
-    console.log('There was an error', error)
-   }
-  }
+  const userInformation = async (user, value) => {
+    const { email, fullname, department, role, phone } = value;
+    try {
+      const docRef = await setDoc(doc(FIRESTORE_DB, `users/${user.user.uid}`), {
+        fullname,
+        email,
+        department,
+        role,
+        phone,
+      });
+    } catch (error) {
+      console.log("There was an error", error);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -83,6 +136,7 @@ const RegisterScreen = () => {
   return (
     <KeyboardAvoidingContainer>
       <View className="flex-1 items-center justify-center bg-white">
+        <UploadScreen progress={progress} visible={visibleUpload} />
         <View className="w-[50%] bg-orange-100 h-40 mt-5">
           <Animatable.Image
             source={require("../../assets/loginn.gif")}
@@ -97,7 +151,23 @@ const RegisterScreen = () => {
             Strictly for Opex consultanting staff
           </Text>
         </View>
+
         <View className=" w-full p-4">
+          <TouchableWithoutFeedback onPress={handlePress}>
+            <View className="flex-column">
+              <View className="w-10 h-10 rounded-lg mt-2 overflow-hidden flex items-center justify-center bg-gray-200">
+                {!newImg && (
+                  <View>
+                    <Icon name="camera" type="font-awesome" size={24} />
+                  </View>
+                )}
+                {newImg && (
+                  <Image source={{ uri: newImg }} className="w-full h-full" />
+                )}
+              </View>
+              <Text className="text-gray-400">Profile Image</Text>
+            </View>
+          </TouchableWithoutFeedback>
           <View className="flex-row space-x-2 border-b border-gray-100 py-2 flex items-center">
             <Icon name="user" type="font-awesome" color="gray" />
             <TextInput
