@@ -27,13 +27,16 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import useImage from "../../hook/useImage";
 import { useState } from "react";
 import UploadScreen from "./UploadScreen";
+import ActivityIndicator from "../components/ActivityIndicator";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
   const { handlePress, newImg } = useImage();
   const [progress, setProgress] = useState(0);
-  const [visibleUpload, setVisibleUpload] = useState(false);
-  console.log(newImg);
+  const [uploadedimg, setUploadedimg] = useState("")
+  // const [visibleUpload, setVisibleUpload] = useState(false);
+  const [loading, setLoading] = useState(false)
+  // console.log(newImg);
   const auth = FIREBASE_AUTH;
   const clearOnboarding = async () => {
     try {
@@ -47,6 +50,7 @@ const RegisterScreen = () => {
     navigation.navigate("LoginScreen");
   };
   const uploadImage = async (newImg, fileType) => {
+    
     const response = await fetch(newImg);
     const blob = await response.blob();
     const storageRef = ref(
@@ -68,12 +72,15 @@ const RegisterScreen = () => {
       () => {
         getDownloadURL(uploadimage.snapshot.ref).then(async (downloadurl) => {
           console.log("downloadURL here", downloadurl);
+          setUploadedimg(downloadurl)
         });
       }
     );
   };
   const registerUser = async (value) => {
-    const { email, password, fullname, department, role, phone } = value;
+    console.log("this should show uploadedimg,", uploadedimg);
+    setLoading(true);
+    const { email, password, fullname } = value;
     try {
       const user = await createUserWithEmailAndPassword(
         FIREBASE_AUTH,
@@ -87,14 +94,30 @@ const RegisterScreen = () => {
         photoURL: newImg,
       });
       await uploadImage(newImg, "image");
+      // Wait for `uploadedimg` to be set by the `uploadImage` function
+      // const uploadedimg = await new Promise((resolve) => {
+      //   const unsubscribe = onSnapshot(
+      //     uploadImageCollection,
+      //     (querySnapshot) => {
+      //       querySnapshot.forEach((doc) => {
+      //         if (doc.exists()) {
+      //           resolve(doc.data().downloadurl);
+      //         }
+      //       });
+      //       unsubscribe(); // Stop listening for updates
+      //     }
+      //   );
+      // });
       userInformation(user, value);
       console.log("User created successfully", user);
+      setLoading(false);
     } catch (error) {
       console.log(error);
       alert("signUp failed: " + error.message);
     }
-    console.log("This are the values", value);
+    // console.log("This are the values", value);
   };
+  
   const userInformation = async (user, value) => {
     const { email, fullname, department, role, phone } = value;
     try {
@@ -104,6 +127,7 @@ const RegisterScreen = () => {
         department,
         role,
         phone,
+       
       });
     } catch (error) {
       console.log("There was an error", error);
@@ -136,7 +160,8 @@ const RegisterScreen = () => {
   return (
     <KeyboardAvoidingContainer>
       <View className="flex-1 items-center justify-center bg-white">
-        <UploadScreen progress={progress} visible={visibleUpload} />
+        {/* <UploadScreen progress={progress} visible={visibleUpload} /> */}
+        {loading && <ActivityIndicator visible={true} />}
         <View className="w-[50%] bg-orange-100 h-40 mt-5">
           <Animatable.Image
             source={require("../../assets/loginn.gif")}

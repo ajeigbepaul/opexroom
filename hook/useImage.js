@@ -11,7 +11,7 @@ export default function useImage() {
   const onChangeImage = (assets) => {
     setImageUri(assets);
   };
-  console.log(imageUri);
+//   console.log(imageUri);
   const handleRemove = () => {
     setNewImg("");
   };
@@ -20,6 +20,7 @@ export default function useImage() {
       const { assets } = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 0.5,
+        allowsEditing:true
       });
       if (!assets.canceled) onChangeImage(assets);
     } catch (error) {

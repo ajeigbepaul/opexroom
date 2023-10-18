@@ -5,6 +5,8 @@ import LoginScreen from "../screens/LoginScreen";
 import OnbordingScreen from "../screens/OnboardingScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import { getItem } from "../../utils/asyncStorage";
+import AddChatRoom from "../screens/AddChatRoom";
+import ChatScreen from "../screens/ChatScreen";
 const Stack = createStackNavigator();
 const AppNavigation = () => {
   const [showonboarding, setShowonboarding] = useState(null);
@@ -84,6 +86,20 @@ const AppNavigation = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          // options={{
+          //   headerShown: false,
+          // }}
+        />
+        <Stack.Screen
+          name="AddChatRoom"
+          component={AddChatRoom}
+          // options={{
+          //   headerShown: false,
+          // }}
+        />
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
           // options={{
           //   headerShown: false,
           // }}
