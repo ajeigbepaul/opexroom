@@ -45,7 +45,7 @@ const HomeScreen = () => {
       headerTitleStyle: { color: "white" },
       headerTintColor: "white",
       headerLeft: () => (
-        <View className="ml-4">
+        <View className="ml-4 ">
           <TouchableOpacity activeOpacity={0.5} onPress={signUserOut}>
             <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
           </TouchableOpacity>
@@ -75,7 +75,7 @@ const HomeScreen = () => {
   }
   return (
     <SafeAreaView>
-      <ScrollView className="h-full">
+      <ScrollView className="h-full bg-white">
         {chatrooms?.map(({ id, data: { Title } }, index) => (
           <CustomListItem key={id} id={id} Title={Title} index={index} goToChat={goToChat}/>
         ))}
