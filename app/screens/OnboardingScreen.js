@@ -27,19 +27,19 @@ const OnbordingScreen = ({ navigation }) => {
               height={300}
             />
           ),
-          title: "Onboarding 1",
-          subtitle: "Done with React Native Onboarding Swiper",
+          title: "Welcome",
+          subtitle: "Welcome To Opex Room",
         },
         {
           backgroundColor: "orange",
           image: <Image source={require("../../assets/onboarding-img2.png")} />,
-          title: "Onboarding 2",
-          subtitle: "You have any inquiries, we are avaible 24/7",
+          title: "Seamless Chats with colleagues",
+          subtitle: "Enjoy your discussion without worries",
         },
         {
           backgroundColor: "#fd3b93",
           image: <Image source={require("../../assets/onboarding-img3.png")} />,
-          title: "Onboarding 3",
+          title: "Satisfied",
           subtitle: "Your satisfaction is our desire",
         },
       ]}

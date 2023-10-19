@@ -56,7 +56,20 @@ const AppNavigation = () => {
             headerShown: false,
           }}
         />
-       
+        <Stack.Screen
+          name="AddChatRoom"
+          component={AddChatRoom}
+          // options={{
+          //   headerShown: false,
+          // }}
+        />
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          // options={{
+          //   headerShown: false,
+          // }}
+        />
       </Stack.Navigator>
     );
   } else {

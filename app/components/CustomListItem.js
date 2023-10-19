@@ -1,9 +1,8 @@
 import { View, Text, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import { Avatar } from "@rneui/base";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebase";
+import {  FIRESTORE_DB } from "../../firebase";
 import { useState } from "react";
-import { useEffect } from "react";
 import {
   doc,
   collection,
