@@ -107,6 +107,7 @@ const ChatScreen = ({ navigation, route }) => {
                       right={-5}
                       size={30}
                       source={{ uri: data?.photoURL }}
+                      className="absolute -bottom-5 -right-1"
                     />
                     <Text>{data.chat}</Text>
                   </View>
@@ -123,12 +124,15 @@ const ChatScreen = ({ navigation, route }) => {
                       left={-5}
                       size={30}
                       source={{ uri: data?.photoURL }}
+                      className="absolute -bottom-4 -left-1"
                     />
                     <View>
                       <Text className="font-semibold text-white px-4">
                         {data.chat}{" "}
                       </Text>
-                      <Text className="text-xs px-4 text-gray-500">{data.displayName}</Text>
+                      <Text className="text-xs px-4 text-gray-500">
+                        {data.displayName}
+                      </Text>
                     </View>
                   </View>
                 )
