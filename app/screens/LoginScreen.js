@@ -8,11 +8,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import KeyboardAvoidingContainer from "../components/KeyboardAvoidingContainer";
 import { FIREBASE_AUTH } from "../../firebase";
-import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const auth = FIREBASE_AUTH;
+  let googleProvider = new GoogleAuthProvider()
   const clearOnboarding = async () => {
     try {
       removeItem("onboarded");
@@ -33,6 +34,7 @@ const LoginScreen = () => {
   const register = () => {
     navigation.navigate("Register");
   };
+  
   const loginUser = async (values) => {
     const { email, password } = values;
     try {

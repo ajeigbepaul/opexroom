@@ -4,10 +4,10 @@
     "slug": "opexroom",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/opexroom.png",
+    "icon": "./assets/opexroomsplash.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/opexroom.png",
+      "image": "./assets/opexroomsplash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/opexroomsplash.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.ajeigbepaul.opexroom"
@@ -33,7 +33,7 @@
       }
     },
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     },
     "updates": {
       "url": "https://u.expo.dev/7af1736b-dece-406f-9826-67a50c17dfe3"
