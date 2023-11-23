@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import KeyboardAvoidingContainer from "../components/KeyboardAvoidingContainer";
 import { FIREBASE_AUTH } from "../../firebase";
-import { onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -34,7 +34,21 @@ const LoginScreen = () => {
   const register = () => {
     navigation.navigate("Register");
   };
-  
+  const loginGoogle = async()=>{
+   try {
+    // Start the Google sign-in process
+    await signInWithRedirect(auth, googleProvider);
+    // Get the result of the sign-in process
+    const result = await getRedirectResult(auth);
+
+    // Use the user from the result
+    const user = result.user;
+
+    console.log(user);
+   } catch (error) {
+    console.log(error)
+   }
+  }
   const loginUser = async (values) => {
     const { email, password } = values;
     try {
@@ -131,7 +145,7 @@ const LoginScreen = () => {
           </View>
 
           <TouchableOpacity
-            onPress={formik.handleSubmit}
+            onPress={loginGoogle}
             className=" rounded-lg  flex flex-row items-center justify-center space-x-2 bg-orange-200 mt-3 p-2"
           >
             <Icon name="google" type="font-awesome" color="red" />
